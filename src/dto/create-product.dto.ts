@@ -1,4 +1,4 @@
-export default class CreateProductDto {
+export default class ProductDto {
     readonly name: string;
     readonly description: string;
     readonly price: number;
