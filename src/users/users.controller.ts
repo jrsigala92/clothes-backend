@@ -34,6 +34,18 @@ export class UsersController {
         return this.usersService.find(params.id);
     }
 
+    @Post('signup')
+    signUp(@Body() user: UserDto){
+        console.log(user);
+        return this.usersService.insert(user);
+    }
+
+    @Post('login')
+    logIn(@Body() user: UserDto){
+        console.log(user);
+        return this.usersService.logIn(user.email, user.password);
+    }
+
     // @Put('put')
     // save(@Body() userDto: UserDto){
     //     console.log('update');

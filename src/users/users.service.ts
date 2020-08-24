@@ -18,9 +18,10 @@ export class UsersService {
 
   async insert(userDetails: UserDto): Promise<User> {
     const userEntity: User = User.create();
-    const {firstName,lastName,email,isActive, products } = userDetails;
+    const {firstName,lastName,email,isActive, products, password } = userDetails;
     userEntity.firstName = firstName;
     userEntity.lastName = lastName;
+    userEntity.password = password;
     userEntity.email = email;
     userEntity.isActive = isActive;
 
@@ -40,4 +41,19 @@ export class UsersService {
     const user: User = await User.findOne({where: {id: userID}, relations: ['products']});
     return user.products;
   }
+  async logIn(email:string, password:string){
+    console.log('');
+    console.log(email + password);
+    const user: User = await User.findOne({where: {email: email}});
+    if(!user) {
+      return {token: null, error:'Usuario no encontrado' };
+    }
+    else if(user.password != password ){
+      return {token: null, error:'Password Incorrecto' };
+    }
+    else {
+      return {token:user.id}
+    }
+  }
+
 }

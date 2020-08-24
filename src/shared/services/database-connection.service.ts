@@ -12,7 +12,7 @@ export class DatabaseConnectionService implements TypeOrmOptionsFactory {
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '22jesus3',
+      password: 'password',
       database:'clothesdb',
       synchronize: true,
       dropSchema: false,
