@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { ApiProperty} from '@nestjs/swagger'
 import { User } from '../users/user.entity';
+import { Category } from 'src/categories/category.entity';
 
 @Entity()
 export class Product {
@@ -28,4 +29,7 @@ export class Product {
 
   @ManyToOne( type => User , user  => user.products)
   user: User;
+
+  @ManyToOne( type => Category , category  => category.products)
+  category: Category;
 }
