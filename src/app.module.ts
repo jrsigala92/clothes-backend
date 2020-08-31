@@ -6,13 +6,13 @@ import { DatabaseConnectionService } from './shared/services/database-connection
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import {CategoriesModule} from './categories/categories.module'
-import { CategoriesController } from './categories/categories.controller';
+import { StatusesModule } from './statuses/statuses.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConnectionService
-    }), UsersModule, ProductsModule, CategoriesModule
+    }), UsersModule, ProductsModule, CategoriesModule, StatusesModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -3,17 +3,13 @@ import { ApiProperty} from '@nestjs/swagger'
 import { Product } from '../products/product.entity';
 
 @Entity()
-export class Category extends BaseEntity{
+export class Status extends BaseEntity{
   @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty()
   @Column()
   name: string;
-
-  @ApiProperty()
-  @Column()
-  description: string;
 
   @OneToMany( type => Product , product => product.category)
   products: Product[];

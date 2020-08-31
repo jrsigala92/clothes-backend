@@ -9,7 +9,7 @@ import { CategoriesService } from './categories.service';
     }
 })
 
-@Controller('products')
+@Controller('categories')
 export class CategoriesController implements CrudController<Category> {
     constructor(public service: CategoriesService){}
     
