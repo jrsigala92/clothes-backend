@@ -1,11 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, BaseEntity } from 'typeorm';
 import { ApiProperty} from '@nestjs/swagger'
 import { User } from '../users/user.entity';
 import { Category } from 'src/categories/category.entity';
 import { Status } from 'src/statuses/status.entity';
 
 @Entity()
-export class Product {
+export class Product extends BaseEntity{
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,6 +24,10 @@ export class Product {
   @Column({ default: true })
   available: boolean;
   @ApiProperty()
+
+  
+  @Column({ default: Date.now() })
+  createdAt: Date;
 
   @ApiProperty()
   userID:number;
