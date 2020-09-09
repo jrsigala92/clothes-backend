@@ -21,12 +21,14 @@ export class Product extends BaseEntity{
   @Column()
   price: number;
 
-  @Column({ default: true })
-  available: boolean;
   @ApiProperty()
+  @Column({default:false, nullable:true})
+  displayInShop: boolean;
 
+  @Column({ default: true })
+  available: boolean;  
   
-  @Column({ default: Date.now() })
+  @Column({nullable:true })
   createdAt: Date;
 
   @ApiProperty()
