@@ -18,11 +18,13 @@ export class UsersService {
 
   async insert(userDetails: UserDto): Promise<User> {
     const userEntity: User = User.create();
-    const {firstName,lastName,email,isActive, products, password } = userDetails;
+    const {firstName,lastName,email,isActive, products, password, address, phone } = userDetails;
     userEntity.firstName = firstName;
     userEntity.lastName = lastName;
     userEntity.password = password;
     userEntity.email = email;
+    userEntity.address = address;
+    userEntity.phone = phone;
     userEntity.isActive = isActive;
 
     await User.save(userEntity);

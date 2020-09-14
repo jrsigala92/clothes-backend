@@ -5,6 +5,8 @@ export interface UserDto {
   firstName: string,
   lastName: string,
   email: string,
+  address: string,
+  phone: string,
   password:string,
   isActive: boolean,
   products?: CreateProductDto[]
