@@ -16,8 +16,8 @@ import { Product } from 'src/products/product.entity';
 @Injectable()
 export class UsersService {
 
-  async insert(userDetails: UserDto): Promise<User> {
-    const userEntity: User = User.create();
+  async save(userDetails: UserDto): Promise<User> {
+    const userEntity: User = userDetails.id ? await User.findOne({where: {id:userDetails.id}}) : User.create();
     const {firstName,lastName,email,isActive, products, password, address, phone } = userDetails;
     userEntity.firstName = firstName;
     userEntity.lastName = lastName;

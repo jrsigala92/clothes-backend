@@ -19,7 +19,7 @@ export class UsersController {
     @Post()
     postUser(@Body() user: UserDto) {
         console.log('entro');
-        return this.usersService.insert(user);
+        return this.usersService.save(user);
     }
     // 'getAll()' returns the list of all the existing users in the database
     @Get()
@@ -37,7 +37,7 @@ export class UsersController {
     @Post('signup')
     signUp(@Body() user: UserDto){
         console.log(user);
-        return this.usersService.insert(user);
+        return this.usersService.save(user);
     }
 
     @Post('login')

@@ -35,7 +35,7 @@ export class ProductsService {
   }
 
   async getAll(): Promise<Product[]> {
-    return await Product.find();
+    return await Product.find({relations:['category','status']});
   }
   // async getProducts(productID: number): Promise<Product[]> {
   //   console.log(typeof(productID));
