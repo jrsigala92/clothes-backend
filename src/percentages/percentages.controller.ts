@@ -1,26 +1,26 @@
 import { Crud, CrudController } from '@nestjsx/crud';
 import { Controller, Post, Get, Body, ParseIntPipe, Param, Put } from '@nestjs/common';
-import { Category } from './category.entity';
-import { CategoriesService } from './categories.service';
+import { Percentage } from './percentages.entity';
+import { PercentagesService } from './percentages.service';
 
 @Crud({
     model: {
-        type: Category
+        type: Percentage
     }
 })
 
-@Controller('categories')
-export class CategoriesController {
-    constructor(public service: CategoriesService){}
+@Controller('percentages')
+export class PercentagesController {
+    constructor(public service: PercentagesService){}
     @Post()
-    postUser(@Body() category: Category) {
+    postUser(@Body() percentage: Percentage) {
         console.log('entro');
-        console.log(category);
-        return this.service.save(category);
+        console.log(percentage);
+        return this.service.save(percentage);
     }
 
     // @Put()
-    // update(@Body() category: Category) {
+    // update(@Body() percentage: Percentage) {
     //     return this.service.update();
     // }
 

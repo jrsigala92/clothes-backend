@@ -7,12 +7,13 @@ import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import {CategoriesModule} from './categories/categories.module'
 import { StatusesModule } from './statuses/statuses.module';
+import { PercentageModule } from './percentages/percentages.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConnectionService
-    }), UsersModule, ProductsModule, CategoriesModule, StatusesModule
+    }), UsersModule, ProductsModule, CategoriesModule, StatusesModule, PercentageModule
   ],
   controllers: [AppController],
   providers: [AppService],
