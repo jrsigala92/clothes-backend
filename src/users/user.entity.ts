@@ -19,6 +19,9 @@ export class User extends BaseEntity{
   @Column()
   email: string;
 
+  @Column({nullable:true })
+  balance: number;
+  
   @ApiProperty()
   @Column()
   address: string;

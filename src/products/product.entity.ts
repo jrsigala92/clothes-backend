@@ -20,6 +20,15 @@ export class Product extends BaseEntity{
   @ApiProperty()
   @Column()
   price: number;
+  
+  @Column({nullable:true })
+  profit: number;
+
+  @Column({nullable:true })
+  donation: number;
+
+  @Column({nullable:true })
+  userProfit: number;
 
   @ApiProperty()
   @Column({default:false, nullable:true})
