@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import { Percentage } from './percentages.entity';
 import {TypeOrmCrudService} from '@nestjsx/crud-typeorm';
 
@@ -23,5 +23,8 @@ export class PercentagesService {
 
   async getAll(): Promise<Percentage[]> {
     return await Percentage.find();
+  }
+  async delete(id: number):Promise<DeleteResult>{
+    return await Percentage.delete(id);
   }
 }

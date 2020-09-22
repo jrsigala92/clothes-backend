@@ -1,5 +1,5 @@
 import { Crud, CrudController } from '@nestjsx/crud';
-import { Controller, Post, Get, Body, ParseIntPipe, Param, Put } from '@nestjs/common';
+import { Controller, Post, Get, Body,Delete, ParseIntPipe, Param, Put } from '@nestjs/common';
 import { Category } from './category.entity';
 import { CategoriesService } from './categories.service';
 
@@ -35,5 +35,10 @@ export class CategoriesController {
     find(@Param() params ){
         console.log(params.id);
         return this.service.find(params.id);
+    }
+
+    @Delete(':id')
+    delete(@Param() params){
+        return this.service.delete(params.id);
     }
 }

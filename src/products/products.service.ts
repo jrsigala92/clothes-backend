@@ -1,7 +1,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import { Product } from './product.entity';
 import {TypeOrmCrudService} from '@nestjsx/crud-typeorm';
 import ProductDto from 'src/dto/create-product.dto';
@@ -42,4 +42,7 @@ export class ProductsService {
   //   const product: Product = await Product.findOne({where: {id: productID}, relations: ['products']});
   //   return product.products;
   // }
+  async delete(id: number):Promise<DeleteResult>{
+    return await Product.delete(id);
+  }
 }

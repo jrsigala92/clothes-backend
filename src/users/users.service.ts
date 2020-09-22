@@ -1,7 +1,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import { User } from './user.entity';
 import {TypeOrmCrudService} from '@nestjsx/crud-typeorm';
 import { UserDto } from './user.interface';
@@ -56,6 +56,9 @@ export class UsersService {
     else {
       return {token:user.id}
     }
+  }
+  async delete(id: number):Promise<DeleteResult>{
+    return await User.delete(id);
   }
 
 }
