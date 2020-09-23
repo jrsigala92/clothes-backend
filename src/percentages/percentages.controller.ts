@@ -1,5 +1,5 @@
 import { Crud, CrudController } from '@nestjsx/crud';
-import { Controller, Post, Get, Body, ParseIntPipe, Param, Put } from '@nestjs/common';
+import { Controller, Post, Get, Body, ParseIntPipe, Param, Put, Delete } from '@nestjs/common';
 import { Percentage } from './percentages.entity';
 import { PercentagesService } from './percentages.service';
 
@@ -35,5 +35,10 @@ export class PercentagesController {
     find(@Param() params ){
         console.log(params.id);
         return this.service.find(params.id);
+    }
+
+    @Delete(':id')
+    delete(@Param() params){
+        return this.service.delete(params.id);
     }
 }

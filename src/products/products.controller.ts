@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Delete } from '@nestjs/common';
 import { Crud, CrudController, Override, ParsedRequest, CrudRequest, ParsedBody } from '@nestjsx/crud';
 import { Product } from './product.entity';
 import { ProductsService } from './products.service';
@@ -7,6 +7,7 @@ import { UsersService } from 'src/users/users.service';
 import { EntityManager, getManager } from 'typeorm';
 import { Category } from 'src/categories/category.entity';
 import ProductDto from 'src/dto/create-product.dto';
+import TransactionDto from 'src/dto/transaction.dto';
 
 @Crud({
     model: {
@@ -42,8 +43,7 @@ export class ProductsController {
 //     }
     @Post()
     postUser(@Body() product: ProductDto) {
-        console.log('entro');
-        return this.productsService.insert(product);
+        return this.productsService.save(product);
     }
     // 'getAll()' returns the list of all the existing users in the database
     @Get()
@@ -56,5 +56,15 @@ export class ProductsController {
     find(@Param() params ){
         console.log(params.id);
         return this.productsService.find(params.id);
+    }
+
+    @Delete(':id')
+    delete(@Param() params){
+        return this.productsService.delete(params.id);
+    }
+
+    @Post('buy')
+    buy(@Body() transaction: TransactionDto){
+        return this.productsService.buy(transaction);
     }
 }

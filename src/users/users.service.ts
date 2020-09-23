@@ -43,10 +43,10 @@ export class UsersService {
     const user: User = await User.findOne({where: {id: userID}, relations: ['products']});
     return user.products;
   }
-  async logIn(email:string, password:string){
+  async logIn(username:string, password:string){
     console.log('');
-    console.log(email + password);
-    const user: User = await User.findOne({where: {email: email}});
+    console.log(username + password);
+    const user: User = await User.findOne({where: {phone: username}});
     if(!user) {
       return {token: null, error:'Usuario no encontrado' };
     }

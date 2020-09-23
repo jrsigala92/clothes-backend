@@ -37,7 +37,7 @@ export class Product extends BaseEntity{
   @Column({ default: true })
   available: boolean;  
   
-  @Column({nullable:true })
+  @Column({nullable:true, default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @ApiProperty()
@@ -49,8 +49,14 @@ export class Product extends BaseEntity{
   @ApiProperty()
   statusID:number;
 
+  @ApiProperty()
+  buyerID:number;
+
   @ManyToOne( type => User , user  => user.products)
   user: User;
+
+   @ManyToOne( type => User , buyer  => buyer.products, {nullable: true})
+  buyer: User;
 
   @ManyToOne( type => Category , category  => category.products)
   category: Category;

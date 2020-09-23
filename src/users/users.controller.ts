@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, ParseIntPipe, Param, Put } from '@nestjs/common';
+import { Controller, Post, Get, Body, ParseIntPipe, Param, Put, Delete } from '@nestjs/common';
 import { Crud, CrudController } from '@nestjsx/crud';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
@@ -46,6 +46,10 @@ export class UsersController {
         return this.usersService.logIn(user.email, user.password);
     }
 
+    @Delete(':id')
+    delete(@Param() params){
+        return this.usersService.delete(params.id);
+    }
     // @Put('put')
     // save(@Body() userDto: UserDto){
     //     console.log('update');
