@@ -3,6 +3,7 @@ import { ApiProperty} from '@nestjs/swagger'
 import { User } from '../users/user.entity';
 import { Category } from 'src/categories/category.entity';
 import { Status } from 'src/statuses/status.entity';
+import { Classification } from 'src/classifications/classification.entity';
 
 @Entity()
 export class Product extends BaseEntity{
@@ -44,6 +45,13 @@ export class Product extends BaseEntity{
   userID:number;
   
   @ApiProperty()
+  classificationID:number;
+
+  @ApiProperty()
+  @Column({nullable:true})
+  size:string;
+  
+  @ApiProperty()
   categoryID:number;
   
   @ApiProperty()
@@ -63,4 +71,7 @@ export class Product extends BaseEntity{
 
   @ManyToOne( type => Status , status  => status.products)
   status: Status;
+  
+  @ManyToOne( type => Classification , classification  => classification.products, {nullable: true})
+  classification: Classification;
 }
