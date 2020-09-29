@@ -15,4 +15,5 @@ export default class ProductDto {
     readonly profit: number;
     readonly donation: number;  
     readonly userProfit: number;
+    readonly size: string;
   }

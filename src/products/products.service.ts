@@ -26,10 +26,11 @@ export class ProductsService {
     console.log(productDetails);
     let percentages: Percentage[] = [];
     const productEntity: Product =productDetails.id ? await Product.findOne({where:{id:productDetails.id}}) : Product.create();
-    const {name,description,price,available, userID, categoryID, classificationID, statusID } = productDetails;
+    const { name, description, price, available, userID, categoryID, classificationID, statusID, size } = productDetails;
     productEntity.name = name ;
     productEntity.description = description;
     productEntity.price = price;
+    productEntity.size = size;
     productEntity.available = available;
     productEntity.user = await User.findOne({where:{id:productDetails.userID.id}});
     productEntity.category = await Category.findOne({where:{id:categoryID.id}});
