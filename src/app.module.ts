@@ -9,6 +9,7 @@ import { CategoriesModule } from './categories/categories.module'
 import { StatusesModule } from './statuses/statuses.module';
 import { PercentageModule } from './percentages/percentages.module';
 import { ClassificationModule } from './classifications/classifications.module';
+import { SizesModule } from './sizes/sizes.module';
 // import { EmailsModule } from './emails/emails.module';
 
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -19,7 +20,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConnectionService
     }),
-    UsersModule, ProductsModule, CategoriesModule, StatusesModule, PercentageModule, ClassificationModule
+    UsersModule, ProductsModule, CategoriesModule, StatusesModule, PercentageModule, ClassificationModule, SizesModule
     // , MailerModule.forRoot({
     //   transport: 'smtps://user@domain.com:pass@smtp.domain.com',
     //   defaults: {

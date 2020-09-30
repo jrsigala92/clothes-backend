@@ -4,6 +4,7 @@ import { User } from '../users/user.entity';
 import { Category } from 'src/categories/category.entity';
 import { Status } from 'src/statuses/status.entity';
 import { Classification } from 'src/classifications/classification.entity';
+import { Size } from 'src/sizes/size.entity';
 
 @Entity()
 export class Product extends BaseEntity{
@@ -48,8 +49,7 @@ export class Product extends BaseEntity{
   classificationID:number;
 
   @ApiProperty()
-  @Column({nullable:true})
-  size:string;
+  sizeID:number;
   
   @ApiProperty()
   categoryID:number;
@@ -68,6 +68,9 @@ export class Product extends BaseEntity{
 
   @ManyToOne( type => Category , category  => category.products)
   category: Category;
+  
+  @ManyToOne( type => Size , size  => size.products)
+  size: Size;
 
   @ManyToOne( type => Status , status  => status.products)
   status: Status;

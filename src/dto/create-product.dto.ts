@@ -1,5 +1,6 @@
 import { Category } from "src/categories/category.entity";
 import { Classification } from "src/classifications/classification.entity";
+import { Size } from "src/sizes/size.entity";
 import { User } from "src/users/user.entity";
 
 export default class ProductDto {
@@ -15,5 +16,5 @@ export default class ProductDto {
     readonly profit: number;
     readonly donation: number;  
     readonly userProfit: number;
-    readonly size: string;
+    readonly sizeID: Size;
   }

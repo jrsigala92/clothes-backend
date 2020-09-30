@@ -12,6 +12,7 @@ import { Status } from 'src/statuses/status.entity';
 import { Observable } from 'rxjs';
 import { Category } from 'src/categories/category.entity';
 import { Classification } from 'src/classifications/classification.entity';
+import { Size } from 'src/sizes/size.entity';
 
 // @Injectable()
 // export class ProductsService extends TypeOrmCrudService<Product>{
@@ -26,14 +27,14 @@ export class ProductsService {
     console.log(productDetails);
     let percentages: Percentage[] = [];
     const productEntity: Product =productDetails.id ? await Product.findOne({where:{id:productDetails.id}}) : Product.create();
-    const { name, description, price, available, userID, categoryID, classificationID, statusID, size } = productDetails;
+    const { name, description, price, available, userID, categoryID, classificationID, statusID, sizeID } = productDetails;
     productEntity.name = name ;
     productEntity.description = description;
     productEntity.price = price;
-    productEntity.size = size;
-    productEntity.available = available;
+    // productEntity.available = available;
     productEntity.user = await User.findOne({where:{id:productDetails.userID.id}});
     productEntity.category = await Category.findOne({where:{id:categoryID.id}});
+    productEntity.size = await Size.findOne({where:{id:sizeID.id}});
     productEntity.classification = await Classification.findOne({where:{id:classificationID.id}});
     productEntity.status = await Status.findOne({where: {name:'Disponible'}});
 
@@ -59,7 +60,7 @@ export class ProductsService {
   }
 
   async find(id: number):Promise<Product>{
-    return await Product.findOne({where: {id:id}, relations:['category', 'status','user', 'classification']});
+    return await Product.findOne({where: {id:id}, relations:['category', 'status','user', 'classification', 'size']});
   }
 
   async getAll(): Promise<Product[]> {
