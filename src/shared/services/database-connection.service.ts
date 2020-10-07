@@ -9,8 +9,8 @@ export class DatabaseConnectionService implements TypeOrmOptionsFactory {
     return {
       name: 'default',
       type: 'mysql',
-      // host: 'remotemysql.com',
-      host: 'localhost',
+      host: 'remotemysql.com',
+      // host: 'localhost',
       port: 3306,
       username: 'OlgTZqcyEa',
       // username: 'root',
