@@ -3,6 +3,7 @@ import { Crud, CrudController } from '@nestjsx/crud';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { UserDto } from './user.interface';
+import { throwError } from 'rxjs';
 
 @Crud({
     model: {
@@ -37,7 +38,12 @@ export class UsersController {
     @Post('signup')
     signUp(@Body() user: UserDto){
         console.log(user);
-        return this.usersService.save(user);
+        this.usersService.findByPhone(user.phone).then((res) => {
+            if(!res){
+                return this.usersService.save(user);  
+            }
+        });        
+        return throwError('usuario existente');   
     }
 
     @Post('login')

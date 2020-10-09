@@ -31,10 +31,13 @@ export class UsersService {
     return userEntity;
   }
 
+  async findByPhone(phone: string):Promise<User>{
+    return await User.findOne({where: {phone: phone}});
+  }
+
   async find(id: number):Promise<User>{
     return await User.findOne({where: {id:id}, relations:['products']});
   }
-
   async getAll(): Promise<User[]> {
     return await User.find();
   }
