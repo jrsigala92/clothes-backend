@@ -14,13 +14,24 @@ import { SizesModule } from './sizes/sizes.module';
 
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { StripeModule } from 'nestjs-stripe';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConnectionService
     }),
-    UsersModule, ProductsModule, CategoriesModule, StatusesModule, PercentageModule, ClassificationModule, SizesModule
+      UsersModule,
+      ProductsModule,
+      CategoriesModule,
+      StatusesModule,
+      PercentageModule,
+      ClassificationModule,
+      SizesModule,
+      StripeModule.forRoot({
+        apiKey: 'sk_test_51HZPYfKegYWvj4Pp2hlK8yUGUW34WwobIXKLMnb2VI9PB0Gkr5WEjZ8P7bmATG0qqLK8wlt6OvH3Oop3XK0S9OW400v913vwgc',
+        apiVersion: '2020-08-27',
+      }),
     // , MailerModule.forRoot({
     //   transport: 'smtps://user@domain.com:pass@smtp.domain.com',
     //   defaults: {

@@ -13,6 +13,8 @@ import { Observable } from 'rxjs';
 import { Category } from 'src/categories/category.entity';
 import { Classification } from 'src/classifications/classification.entity';
 import { Size } from 'src/sizes/size.entity';
+import Stripe from 'stripe';
+import { InjectStripe } from 'nestjs-stripe';
 
 // @Injectable()
 // export class ProductsService extends TypeOrmCrudService<Product>{
@@ -23,6 +25,7 @@ import { Size } from 'src/sizes/size.entity';
 
 @Injectable()
 export class ProductsService {
+  public constructor(@InjectStripe() private readonly stripeClient: Stripe){}
   async save(productDetails: ProductDto): Promise<Product> {
     console.log(productDetails);
     let percentages: Percentage[] = [];
@@ -92,5 +95,15 @@ export class ProductsService {
     await Product.save(productEntity);
     await User.save(ownerEntity);
     return productEntity;
+  }
+
+  async buyWithStripe(transaction: TransactionDto):Promise<any>
+  {
+    return this.stripeClient.charges.create({
+      amount: 2000,
+      currency: 'MXN',
+      source: transaction.tokenId,
+      capture: true,  // note that capture: false
+    });
   }
 }

@@ -4,6 +4,8 @@ import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { UserDto } from './user.interface';
 import { throwError } from 'rxjs';
+import TransactionDto from 'src/dto/transaction.dto';
+import { ProductsService } from 'src/products/products.service';
 
 @Crud({
     model: {
