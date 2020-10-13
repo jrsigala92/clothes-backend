@@ -63,13 +63,13 @@ export class ProductsController {
         return this.productsService.delete(params.id);
     }
 
-    // @Post('buy')
-    // buy(@Body() transaction: TransactionDto){
-    //     return this.productsService.buy(transaction);
-    // }
-    
     @Post('buy')
     buy(@Body() transaction: TransactionDto){
+        return this.productsService.buy(transaction);
+    }
+    
+    @Post('buyWithStripe')
+    buyWithStripe(@Body() transaction: TransactionDto){
         return this.productsService.buyWithStripe(transaction);
     }
 }
