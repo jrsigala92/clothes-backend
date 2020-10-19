@@ -11,10 +11,6 @@ export class Category extends BaseEntity{
   @Column()
   name: string;
 
-  @ApiProperty()
-  @Column()
-  description: string;
-
   @OneToMany( type => Product , product => product.category)
   products: Product[];
 }

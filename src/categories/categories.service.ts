@@ -8,10 +8,7 @@ import {TypeOrmCrudService} from '@nestjsx/crud-typeorm';
 export class CategoriesService {
   async save(categoryDetails: Category): Promise<Category> {
     const categoryEntity: Category = categoryDetails.id ? await Category.findOne({where:{id:categoryDetails.id}}) : Category.create();
-    
-    const {name,description } = categoryDetails;
     categoryEntity.name = name;
-    categoryEntity.description = description;
 
     await Category.save(categoryEntity);
     return categoryEntity;
