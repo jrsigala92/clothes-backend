@@ -15,9 +15,15 @@ import { SizesModule } from './sizes/sizes.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { StripeModule } from 'nestjs-stripe';
+import { FilesModule } from './files/files.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
+    MulterModule.register({
+      dest: './uploads',
+    }),
+    FilesModule,
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConnectionService
     }),
@@ -32,6 +38,7 @@ import { StripeModule } from 'nestjs-stripe';
         apiKey: 'sk_test_51HZPYfKegYWvj4Pp2hlK8yUGUW34WwobIXKLMnb2VI9PB0Gkr5WEjZ8P7bmATG0qqLK8wlt6OvH3Oop3XK0S9OW400v913vwgc',
         apiVersion: '2020-08-27',
       }),
+      FilesModule,
     // , MailerModule.forRoot({
     //   transport: 'smtps://user@domain.com:pass@smtp.domain.com',
     //   defaults: {
