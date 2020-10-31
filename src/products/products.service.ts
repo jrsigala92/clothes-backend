@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult } from 'typeorm';
 import { Product } from './product.entity';
-import {TypeOrmCrudService} from '@nestjsx/crud-typeorm';
+import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import ProductDto from 'src/dto/create-product.dto';
 import { Percentage } from 'src/percentages/percentages.entity';
 import TransactionDto from 'src/dto/transaction.dto';
@@ -25,82 +25,92 @@ import { InjectStripe } from 'nestjs-stripe';
 
 @Injectable()
 export class ProductsService {
-  public constructor(@InjectStripe() private readonly stripeClient: Stripe){}
+  public constructor(@InjectStripe() private readonly stripeClient: Stripe) { }
   async save(productDetails: ProductDto): Promise<Product> {
     console.log(productDetails);
     let percentages: Percentage[] = [];
-    const productEntity: Product =productDetails.id ? await Product.findOne({where:{id:productDetails.id}}) : Product.create();
+    const productEntity: Product = productDetails.id ? await Product.findOne({ where: { id: productDetails.id } }) : Product.create();
     const { name, description, price, available, userID, categoryID, classificationID, statusID, sizeID } = productDetails;
-    productEntity.name = name ;
+    productEntity.name = name;
     productEntity.description = description;
     productEntity.price = price;
     // productEntity.available = available;
-    productEntity.user = await User.findOne({where:{id:productDetails.userID.id}});
-    productEntity.category = await Category.findOne({where:{id:categoryID.id}});
-    productEntity.size = await Size.findOne({where:{id:sizeID.id}});
-    productEntity.classification = await Classification.findOne({where:{id:classificationID.id}});
-    productEntity.status = await Status.findOne({where: {name:'Disponible'}});
+    productEntity.user = await User.findOne({ where: { id: productDetails.userID.id } });
+    productEntity.category = await Category.findOne({ where: { id: categoryID.id } });
+    productEntity.size = await Size.findOne({ where: { id: sizeID.id } });
+    productEntity.classification = await Classification.findOne({ where: { id: classificationID.id } });
+    productEntity.status = await Status.findOne({ where: { name: 'Disponible' } });
 
-    (await this.getPercentages()).forEach(response =>
-      {
-        if(!percentages) {
-          percentages = [];
-        }
-        
-        percentages.push(response);
-      });
+    (await this.getPercentages()).forEach(response => {
+      if (!percentages) {
+        percentages = [];
+      }
 
-    productEntity.profit = productEntity.price * (percentages.find(e => e.name === 'Ganancia' ).quantity / 100 );
-    productEntity.userProfit = productEntity.price * (percentages.find(e => e.name === 'Usuario' ).quantity / 100 );
-    productEntity.donation = productEntity.price * (percentages.find(e => e.name === 'Donación' ).quantity / 100 );
+      percentages.push(response);
+    });
+
+    productEntity.profit = productEntity.price * (percentages.find(e => e.name === 'Ganancia').quantity / 100);
+    productEntity.userProfit = productEntity.price * (percentages.find(e => e.name === 'Usuario').quantity / 100);
+    productEntity.donation = productEntity.price * (percentages.find(e => e.name === 'Donación').quantity / 100);
 
     await Product.save(productEntity);
     return productEntity;
   }
 
-  async getPercentages():Promise<Percentage[]>{
+  async getPercentages(): Promise<Percentage[]> {
     return await Percentage.find();
   }
 
-  async find(id: number):Promise<Product>{
-    return await Product.findOne({where: {id:id}, relations:['category', 'status','user', 'classification', 'size']});
+  async find(id: number): Promise<Product> {
+    return await Product.findOne({ where: { id: id }, relations: ['category', 'status', 'user', 'classification', 'size', 'files'] });
   }
 
   async getAll(): Promise<Product[]> {
-    return await Product.find({relations:['category','status','user']});
+    return await Product.find({ relations: ['category', 'status', 'user', 'files'] });
   }
-  
-  async delete(id: number):Promise<DeleteResult>{
+
+  async delete(id: number): Promise<DeleteResult> {
     return await Product.delete(id);
   }
 
-  async buy(transaction: TransactionDto):Promise<Product>
-  {
-    const {userId, productId } = transaction;
-    const userEntity: User = await User.findOne({where:{id:transaction.userId}});
+  async buy(transaction: TransactionDto): Promise<Product> {
+    const { userId, productIds } = transaction;
+    const userEntity: User = await User.findOne({ where: { id: transaction.userId } });
     // product information update
-    const productEntity: Product = await Product.findOne({where:{id:transaction.productId}, relations:['user']});
+    const productEntity: Product = await Product.findOne({ where: { id: transaction.productIds }, relations: ['user'] });
     productEntity.buyer = userEntity;
-    productEntity.status = await Status.findOne({where: {name: 'Vendido'}});
+    productEntity.status = await Status.findOne({ where: { name: 'Vendido' } });
     productEntity.displayInShop = false;
     productEntity.available = false;
 
     // owner of the clothe update
-    const ownerEntity = await User.findOne({where: {id: productEntity.user.id}});
-    
+    const ownerEntity = await User.findOne({ where: { id: productEntity.user.id } });
+
     console.log('actual:', ownerEntity.balance);
-    console.log('ganancia:', productEntity.userProfit);  
+    console.log('ganancia:', productEntity.userProfit);
     ownerEntity.balance = (ownerEntity.balance ?? 0) + productEntity.userProfit;
-    console.log('final:', ownerEntity.balance);  
+    console.log('final:', ownerEntity.balance);
     await Product.save(productEntity);
     await User.save(ownerEntity);
     return productEntity;
   }
 
-  async buyWithStripe(transaction: TransactionDto):Promise<any>
-  {
+  async buyWithStripe(transaction: TransactionDto): Promise<any> {
+    let totalAmmount: number = 0.0;
+    console.log(transaction);
+    for (let index = 0; index <  transaction.productIds.length; index++) {
+      const productEntity: Product = await Product.findOne({ where: { id: transaction.productIds[index] }, select: ["price"] });//.then(res => {
+      console.log(transaction.productIds[index]);
+      console.log(productEntity.price);
+      totalAmmount = totalAmmount + Number.parseFloat(productEntity.price.toString());
+      //
+        
+      //
+    }
+
+    console.log('final', totalAmmount);
     return this.stripeClient.charges.create({
-      amount: 2000,
+      amount: totalAmmount * 100,
       currency: 'MXN',
       source: transaction.tokenId,
       capture: true,  // note that capture: false

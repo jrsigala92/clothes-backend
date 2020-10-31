@@ -2,10 +2,12 @@ import { Controller, Get, Post,UseInterceptors, UploadedFile, UploadedFiles, Res
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from '../utils/file-upload.utils';
+import { File } from './files.entity';
+import { FilesService } from './files.service';
 
 @Controller('files')
 export class FilesController {
-  constructor() {}
+  constructor(public filesService: FilesService) {}
 
   // upload single file
   @Post()
@@ -46,8 +48,15 @@ export class FilesController {
       const fileReponse = {
         originalname: file.originalname,
         filename: file.filename,
+        destination: file.destination
       };
+      
       response.push(fileReponse);
+      let fileToSave = new File();
+      fileToSave.name =  fileReponse.filename;
+      fileToSave.path = fileReponse.destination;
+      fileToSave.productId = params.productId;
+      this.filesService.save(fileToSave);
     // });
     return {
       status: HttpStatus.OK,
@@ -57,11 +66,16 @@ export class FilesController {
   }
 
   // @Get(':imagename')
-  @Get()
-  getImage(@Res() res) {
+  @Get(':imagename')
+  getImage(@Res() res, @Param() param) {
   // getImage(@Res() res) {
-    console.log('entró');
-    const response = res.sendFile('th5221.jpg', { root: './uploads' });
+    
+    console.log(param.name);
+    console.log(param.imagename);
+    const name = param.name;
+    const response = res.sendFile(param.imagename, {root:'./uploads'});
+    console.log(response);
+    // console.log(res.sendFile(param.name, { root: './uploads' }));
     return {
       status: HttpStatus.OK,
       data: response,

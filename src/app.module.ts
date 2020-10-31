@@ -17,6 +17,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { StripeModule } from 'nestjs-stripe';
 import { FilesModule } from './files/files.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { ShoppingCartElemModule } from './shopping-cart-elem/shopping-cart-elems.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { MulterModule } from '@nestjs/platform-express';
         apiVersion: '2020-08-27',
       }),
       FilesModule,
+      ShoppingCartElemModule
     // , MailerModule.forRoot({
     //   transport: 'smtps://user@domain.com:pass@smtp.domain.com',
     //   defaults: {

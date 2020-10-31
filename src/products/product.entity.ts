@@ -1,10 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, BaseEntity, OneToMany } from 'typeorm';
 import { ApiProperty} from '@nestjs/swagger'
 import { User } from '../users/user.entity';
 import { Category } from 'src/categories/category.entity';
 import { Status } from 'src/statuses/status.entity';
 import { Classification } from 'src/classifications/classification.entity';
 import { Size } from 'src/sizes/size.entity';
+import { File } from 'src/files/files.entity';
 
 @Entity()
 export class Product extends BaseEntity{
@@ -59,6 +60,9 @@ export class Product extends BaseEntity{
 
   @ApiProperty()
   buyerID:number;
+
+  @OneToMany( type => File , file => file.product)
+  files: File[];
 
   @ManyToOne( type => User , user  => user.products)
   user: User;

@@ -1,5 +1,5 @@
 export default class TransactionDto {
     readonly userId: number;
-    readonly productId: string; 
+    readonly productIds: number[]; 
     readonly tokenId?:string;
   }
