@@ -17,4 +17,5 @@ export default class ProductDto {
     readonly donation: number;  
     readonly userProfit: number;
     readonly sizeID: Size;
+    readonly displayInShop: boolean;
   }
