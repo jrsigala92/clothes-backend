@@ -7,6 +7,7 @@ import {TypeOrmCrudService} from '@nestjsx/crud-typeorm';
 @Injectable()
 export class ShoppingCartElemsService {
   async save(shoppingCartElemDetails: ShoppingCartElem): Promise<ShoppingCartElem> {
+    
     const shoppingCartElemEntity: ShoppingCartElem = shoppingCartElemDetails.id ? await ShoppingCartElem.findOne({where:{id:shoppingCartElemDetails.id}}) : ShoppingCartElem.create();
     
     const {productId, userId, price, name } = shoppingCartElemDetails;

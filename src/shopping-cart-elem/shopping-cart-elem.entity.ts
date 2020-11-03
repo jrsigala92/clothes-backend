@@ -8,15 +8,15 @@ export class ShoppingCartElem extends BaseEntity{
 
   @ApiProperty()
   @Column()
-  productId: string;
+  productId: number;
 
   @ApiProperty()
   @Column()
-  userId: string;
+  userId: number;
 
   @ApiProperty()
   @Column("decimal", { precision: 5, scale: 2 })
-  price: string;
+  price: number;
   
   @ApiProperty()
   @Column()

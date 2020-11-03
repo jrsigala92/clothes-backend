@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity } from 'typeorm';
 import { ApiProperty} from '@nestjs/swagger'
 import { Product } from '../products/product.entity';
+import { Transaction } from 'src/transactions/transaction.entity';
 
 @Entity()
 export class User extends BaseEntity{
@@ -38,4 +39,7 @@ export class User extends BaseEntity{
   
   @OneToMany( type => Product , product => product.user)
   products: Product[];
+
+  @OneToMany( type => Transaction , transaction => transaction.user)
+  transactions: Transaction[];
 }

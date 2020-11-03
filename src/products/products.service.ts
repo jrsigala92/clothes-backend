@@ -1,7 +1,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult } from 'typeorm';
+import { Repository, DeleteResult, getManager, getConnection, AdvancedConsoleLogger } from 'typeorm';
 import { Product } from './product.entity';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import ProductDto from 'src/dto/create-product.dto';
@@ -15,6 +15,10 @@ import { Classification } from 'src/classifications/classification.entity';
 import { Size } from 'src/sizes/size.entity';
 import Stripe from 'stripe';
 import { InjectStripe } from 'nestjs-stripe';
+import { ShoppingCartElem } from 'src/shopping-cart-elem/shopping-cart-elem.entity';
+import { ShoppingCartElemModule } from 'src/shopping-cart-elem/shopping-cart-elems.module';
+import { Transaction } from 'src/transactions/transaction.entity';
+import { PRIORITY_ABOVE_NORMAL } from 'constants';
 
 // @Injectable()
 // export class ProductsService extends TypeOrmCrudService<Product>{
@@ -61,6 +65,10 @@ export class ProductsService {
     return await Percentage.find();
   }
 
+  async getShoppingCartElements(userId: number): Promise<ShoppingCartElem[]> {
+    return await ShoppingCartElem.find({ where: { userId: userId } });
+  }
+
   async find(id: number): Promise<Product> {
     return await Product.findOne({ where: { id: id }, relations: ['category', 'status', 'user', 'classification', 'size', 'files'] });
   }
@@ -96,24 +104,90 @@ export class ProductsService {
   }
 
   async buyWithStripe(transaction: TransactionDto): Promise<any> {
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
+    await queryRunner.connect();
+
     let totalAmmount: number = 0.0;
     console.log(transaction);
-    for (let index = 0; index <  transaction.productIds.length; index++) {
-      const productEntity: Product = await Product.findOne({ where: { id: transaction.productIds[index] }, select: ["price"] });//.then(res => {
-      console.log(transaction.productIds[index]);
-      console.log(productEntity.price);
-      totalAmmount = totalAmmount + Number.parseFloat(productEntity.price.toString());
-      //
-        
-      //
-    }
 
-    console.log('final', totalAmmount);
-    return this.stripeClient.charges.create({
-      amount: totalAmmount * 100,
-      currency: 'MXN',
-      source: transaction.tokenId,
-      capture: true,  // note that capture: false
-    });
+    await queryRunner.startTransaction();
+    // await getManager().transaction(async transactionalEntityManager => {
+    try {
+      for (let index = 0; index < transaction.productIds.length; index++) {
+        console.log('indice:', index);
+        const productEntity: Product = await Product.findOne({ where: { id: transaction.productIds[index] }, relations: ['user'] });//.then(res => {
+        console.log(productEntity);
+        const userEntity: User = await User.findOne({ where: { id: transaction.userId } });
+        console.log(userEntity);
+        const ownerEntity = await User.findOne({ where: { id: productEntity.user.id } });
+        console.log(ownerEntity);
+        console.log(transaction.productIds[index]);
+        console.log(productEntity.price);
+        totalAmmount = totalAmmount + Number.parseFloat(productEntity.price.toString());
+        //      
+        // product information update
+        productEntity.buyer = userEntity;
+        productEntity.status = await Status.findOne({ where: { name: 'Vendido' } });
+        productEntity.displayInShop = false;
+        productEntity.available = false;
+
+        // owner of the clothe update
+
+        console.log('actual:', ownerEntity.balance);
+        console.log('ganancia:', productEntity.userProfit);
+        ownerEntity.balance = (ownerEntity.balance ?? 0) + productEntity.userProfit;
+        console.log('final:', ownerEntity.balance);
+        await Product.save(productEntity);
+        await User.save(ownerEntity);
+      }
+      let shoppingCartElements: ShoppingCartElem[] = [];
+      // this.getShoppingCartElements(transaction.userId).
+      console.log('========================================================= elementos en carrito');
+
+      let currentDate = new Date();
+      (await this.getShoppingCartElements(transaction.userId)).forEach(async response => {
+        if (!shoppingCartElements) {
+          shoppingCartElements = [];
+        }
+        
+        console.log('========================================================= ', response);
+
+        const transactionEntity: Transaction = Transaction.create();
+        const { name, price, productId } = response;
+        transactionEntity.productName = name;
+        transactionEntity.productId = productId;
+        transactionEntity.user = await User.findOne({where: {id: transaction.userId}});
+        transactionEntity.price = price;
+        transactionEntity.productName = name;
+        transactionEntity.token = transaction.tokenId;
+        transactionEntity.transactionDate = currentDate;
+        await Transaction.save(transactionEntity);
+      });
+      console.log('========================================================= borrar carrito');
+
+      await ShoppingCartElem.delete({ userId: transaction.userId });
+      console.log('========================================================= pagar');
+
+      let result = await this.stripeClient.charges.create({
+        amount: totalAmmount * 100,
+        // amount: 0 * 100,
+        currency: 'MXN',
+        source: transaction.tokenId,
+        capture: true,  // note that capture: false
+      });
+      console.log('========================================================= commit');
+
+      await queryRunner.commitTransaction();
+      return result;
+
+    } catch (error) {
+      console.log(error);
+      await queryRunner.rollbackTransaction();
+      return error;
+    } finally {
+      // you need to release query runner which is manually created:
+      await queryRunner.release();
+    }
   }
 }

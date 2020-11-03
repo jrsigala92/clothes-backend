@@ -18,6 +18,7 @@ import { StripeModule } from 'nestjs-stripe';
 import { FilesModule } from './files/files.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ShoppingCartElemModule } from './shopping-cart-elem/shopping-cart-elems.module';
+import { TransactionModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { ShoppingCartElemModule } from './shopping-cart-elem/shopping-cart-elems
         apiVersion: '2020-08-27',
       }),
       FilesModule,
-      ShoppingCartElemModule
+      ShoppingCartElemModule,
+      TransactionModule
     // , MailerModule.forRoot({
     //   transport: 'smtps://user@domain.com:pass@smtp.domain.com',
     //   defaults: {

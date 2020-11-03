@@ -4,7 +4,7 @@ import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from '../utils/file-upload.utils';
 import { File } from './files.entity';
 import { FilesService } from './files.service';
-
+const fs = require('fs');
 @Controller('files')
 export class FilesController {
   constructor(public filesService: FilesService) {}
@@ -80,5 +80,14 @@ export class FilesController {
       status: HttpStatus.OK,
       data: response,
     };
+  }
+  @Post()
+  deleteImage(@Body() params) {
+    try {
+      return fs.unlinkSync(params.path);
+      //file removed
+    } catch (err) {
+      return err;
+    }
   }
 }
