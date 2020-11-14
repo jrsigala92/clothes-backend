@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Delete, Res } from '@nestjs/common';
 import { Crud, CrudController, Override, ParsedRequest, CrudRequest, ParsedBody } from '@nestjsx/crud';
 import { Product } from './product.entity';
 import { ProductsService } from './products.service';
@@ -56,6 +56,19 @@ export class ProductsController {
     find(@Param() params ){
         console.log(params.id);
         return this.productsService.find(params.id);
+    }
+
+    @Get('getWithImages:id')
+    getWithImages(@Res() res, @Param() params ){
+        console.log(params.id);
+        let prod:Product;
+        let images:any[] = [];
+        this.productsService.find(params.id).then(res => prod = res);
+        prod.files.forEach(item => {
+            const response = res.sendFile(item.name, {root:'./uploads'});
+            images.push(response);
+        });
+        return {prod, images};
     }
 
     @Delete(':id')

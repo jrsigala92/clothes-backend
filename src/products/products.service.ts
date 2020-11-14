@@ -44,7 +44,7 @@ export class ProductsService {
     productEntity.category = await Category.findOne({ where: { id: categoryID.id } });
     productEntity.size = await Size.findOne({ where: { id: sizeID.id } });
     productEntity.classification = await Classification.findOne({ where: { id: classificationID.id } });
-    productEntity.status = await Status.findOne({ where: { name: 'Disponible' } });
+    productEntity.status = await Status.findOne({ where: { id: statusID.id } });
 
     (await this.getPercentages()).forEach(response => {
       if (!percentages) {

@@ -21,16 +21,16 @@ export class Product extends BaseEntity{
   description: string;
 
   @ApiProperty()
-  @Column("decimal", { precision: 5, scale: 2 })
+  @Column("decimal", { precision: 18, scale: 2 })
   price: number;
   
-  @Column("decimal", { precision: 5, scale: 2 , nullable:true})
+  @Column("decimal", { precision: 18, scale: 2 , nullable:true})
   profit: number;
 
-  @Column("decimal", { precision: 5, scale: 2 , nullable:true})
+  @Column("decimal", { precision: 18, scale: 2 , nullable:true})
   donation: number;
 
-  @Column("decimal", { precision: 5, scale: 2 , nullable:true})
+  @Column("decimal", { precision: 18, scale: 2 , nullable:true})
   userProfit: number;
 
   @ApiProperty()
